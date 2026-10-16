@@ -1,0 +1,346 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Triage Accessibility Checklist</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,400;1,500&display=swap">
+<style>
+/* Layout: one reading column (~46rem), a sticky shortlist bar, three triage sections as plain rule-separated lists. */
+:root {
+  --bg: #FAFAFC; --surface: #FFFFFF; --fg: #16141B; --muted: #55515F; --line: #E3E0EA;
+  --accent: #6B2FC2; --accent-soft: #F1E9FD;
+  --design: #6E4E00; --design-bg: #FCEFC2; --content: #6B2FC2; --content-bg: #EFE4FD; --code: #26222E; --code-bg: #E7E5EC;
+  --pass: #137333; --pass-bg: #E3F3E8; --issue: #B3261E; --issue-bg: #FBE6E4; --na: #55515F; --na-bg: #EEEDF1;
+  --focus: #005FCC;
+  --f-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --f-body: 'Manrope', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --f-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0F0E12; --surface: #18171D; --fg: #F2F0F5; --muted: #ABA7B5; --line: #2C2A35;
+  --accent: #D8B4FE; --accent-soft: #2B2140;
+  --design: #FAD85F; --design-bg: #362D10; --content: #D8B4FE; --content-bg: #2E2240; --code: #ECEAF1; --code-bg: #2A2833;
+  --pass: #7DDA9A; --pass-bg: #163222; --issue: #FF9A8F; --issue-bg: #3A1A18; --na: #ABA7B5; --na-bg: #26242D;
+  --focus: #8AB4FF; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0F0E12; --surface: #18171D; --fg: #F2F0F5; --muted: #ABA7B5; --line: #2C2A35;
+  --accent: #D8B4FE; --accent-soft: #2B2140;
+  --design: #FAD85F; --design-bg: #362D10; --content: #D8B4FE; --content-bg: #2E2240; --code: #ECEAF1; --code-bg: #2A2833;
+  --pass: #7DDA9A; --pass-bg: #163222; --issue: #FF9A8F; --issue-bg: #3A1A18; --na: #ABA7B5; --na-bg: #26242D;
+  --focus: #8AB4FF; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 46rem; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+a { color: var(--accent); text-underline-offset: 2px; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--fg); color: var(--bg); padding: 8px 14px; border-radius: 6px; z-index: 10; }
+.skip:focus { left: max(16px, env(safe-area-inset-left, 0px)); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+header.top { padding-block: 48px 24px; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+h1 { font-size: clamp(2rem, 5vw, 2.75rem); line-height: 1.08; font-weight: 800; letter-spacing: -.02em; margin: 0 0 14px; text-wrap: balance; }
+h1 em { font-family: var(--f-display); font-weight: 400; color: var(--accent); }
+.lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 22px; max-width: 38rem; }
+.levels { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: .9rem; color: var(--muted); margin: 0 0 8px; padding: 0; list-style: none; }
+.levels b { color: var(--fg); }
+.tools { font-size: .9rem; color: var(--muted); margin: 6px 0 0; }
+
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 26px 0 0; padding: 0; list-style: none; counter-reset: s; }
+.steps li { border-top: 2px solid var(--fg); padding-top: 10px; font-size: .88rem; color: var(--muted); counter-increment: s; }
+.steps li strong { display: block; color: var(--fg); font-size: .95rem; }
+.steps li strong::before { content: counter(s) ". "; }
+@media (max-width: 620px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); padding-block: 14px 12px; margin-top: 28px; }
+.bar h2 { font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 8px; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: inherit; font-size: .85rem; font-weight: 600; border: 1.5px solid var(--line); background: var(--surface); color: var(--fg); padding: 5px 12px; border-radius: 999px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.chip[aria-pressed="true"]::before { content: "✓ "; }
+.chip.always { cursor: default; background: transparent; border-style: dashed; color: var(--muted); }
+.barfoot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; margin-top: 10px; font-size: .88rem; color: var(--muted); }
+.jump { display: flex; gap: 14px; }
+.jump a { font-weight: 700; text-decoration: none; }
+.jump a:hover { text-decoration: underline; }
+.tally { font-variant-numeric: tabular-nums; }
+
+section.layer { padding-top: 40px; scroll-margin-top: 150px; }
+.layer-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; border-bottom: 2px solid var(--fg); padding-bottom: 8px; }
+.layer-head h2 { margin: 0; font-size: 1.6rem; font-weight: 800; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; }
+.tag { font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; }
+.t-design { color: var(--design); background: var(--design-bg); }
+.t-content { color: var(--content); background: var(--content-bg); }
+.t-code { color: var(--code); background: var(--code-bg); }
+.layer-when { color: var(--muted); margin: 10px 0 0; font-size: .95rem; }
+.layer-count { font-size: .88rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+ol.items { list-style: none; margin: 0; padding: 0; }
+.item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 20px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.item[hidden] { display: none !important; }
+.task { font-weight: 700; font-size: 1.02rem; margin: 0; text-wrap: pretty; }
+.task code, .why code { font-family: var(--f-mono); font-size: .88em; background: var(--na-bg); padding: 1px 5px; border-radius: 4px; }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; margin: 6px 0 0; font-size: .86rem; }
+.lvl { font-size: .72rem; font-weight: 800; padding: 1px 7px; border-radius: 4px; border: 1.5px solid currentColor; color: var(--muted); }
+.why { color: var(--muted); font-size: .92rem; margin: 6px 0 0; }
+.item.s-issue { background: linear-gradient(90deg, var(--issue-bg), transparent 70%); }
+
+fieldset.seg { border: 0; margin: 0; padding: 0; display: flex; align-self: start; }
+fieldset.seg legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label { font-size: .8rem; font-weight: 700; padding: 7px 10px; min-width: 44px; min-height: 36px; text-align: center; border: 1.5px solid var(--line); background: var(--surface); color: var(--muted); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.seg label:first-of-type { border-radius: 8px 0 0 8px; }
+.seg label:last-of-type { border-radius: 0 8px 8px 0; }
+.seg label + input + label, .seg input + label ~ label { margin-left: -1.5px; }
+.seg input:focus-visible + label { outline: 3px solid var(--focus); outline-offset: 1px; position: relative; z-index: 1; }
+.seg input[value="pass"]:checked + label { background: var(--pass-bg); color: var(--pass); border-color: var(--pass); position: relative; }
+.seg input[value="issue"]:checked + label { background: var(--issue-bg); color: var(--issue); border-color: var(--issue); position: relative; }
+.seg input[value="na"]:checked + label { background: var(--na-bg); color: var(--fg); border-color: var(--na); position: relative; }
+@media (max-width: 560px) { .item { grid-template-columns: minmax(0, 1fr); } }
+
+.out { margin: 48px 0 0; padding: 22px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.out h2 { margin: 0 0 6px; font-size: 1.2rem; }
+.out p { margin: 0 0 14px; color: var(--muted); font-size: .92rem; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
+.row label { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; font-weight: 700; }
+select, .btn { font: inherit; font-size: .92rem; }
+select { padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); min-width: 0; max-width: 100%; }
+.btn { font-weight: 700; padding: 9px 16px; border-radius: 8px; border: 1.5px solid var(--fg); background: var(--fg); color: var(--bg); cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--fg); }
+.status { font-size: .88rem; color: var(--pass); min-height: 1.3em; margin-top: 10px; }
+textarea { width: 100%; min-height: 140px; margin-top: 10px; font-family: var(--f-mono); font-size: .82rem; padding: 10px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); }
+.confirm { margin-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+footer { padding-block: 40px 56px; color: var(--muted); font-size: .85rem; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+html { scroll-behavior: smooth; }
+</style>
+
+<a class="skip" href="#design">Skip to the checklist</a>
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">SI 538 · Citizen Interaction Design · Detroit Land Bank audit</p>
+    <h1>The triage <em>checklist</em></h1>
+    <p class="lede">A short, practical accessibility checklist sorted the way teams fix things: what design decides, what content says, and what code builds. Each item links to the WCAG 2.2 rule behind it.</p>
+    <ul class="levels" aria-label="WCAG levels">
+      <li><b>A</b> · the floor: without it, people are blocked</li>
+      <li><b>AA</b> · the standard and legal target</li>
+      <li><b>AAA</b> · the stretch, nice where you can</li>
+    </ul>
+    <p class="tools">Tools: your keyboard, browser zoom, <a href="https://wave.webaim.org/" target="_blank" rel="noopener">WAVE</a>, <a href="https://webaim.org/resources/contrastchecker/" target="_blank" rel="noopener">WebAIM Contrast Checker</a>, <a href="https://www.w3.org/WAI/WCAG22/quickref/" target="_blank" rel="noopener">WCAG 2.2 quick reference</a>.</p>
+    <ol class="steps" aria-label="How to audit in 20 minutes">
+      <li><strong>Scan</strong>List what’s on the page.</li>
+      <li><strong>Shortlist</strong>Turn off what isn’t there.</li>
+      <li><strong>Quick pass</strong>WAVE, contrast, one Tab run.</li>
+      <li><strong>Go deep</strong>Mark each item, rank your top 3.</li>
+    </ol>
+  </header>
+
+  <div class="bar" role="region" aria-labelledby="bar-h">
+    <h2 id="bar-h">What’s on your page?</h2>
+    <div class="chips" id="chips">
+      <span class="chip always" title="These checks always apply">Every page</span>
+    </div>
+    <div class="barfoot">
+      <nav class="jump" aria-label="Checklist sections">
+        <a href="#design">Design</a><a href="#content">Content</a><a href="#code">Code</a>
+      </nav>
+      <span class="tally" id="tally" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <main id="main">
+    <section class="layer" id="design" aria-labelledby="h-design">
+      <div class="layer-head"><h2 id="h-design"><span class="tag t-design">Layer 1</span> Design</h2><span class="layer-count" id="c-design"></span></div>
+      <p class="layer-when">Decided at the wireframe, before the design system exists. The cheapest place to fix anything.</p>
+      <ol class="items" id="l-design"></ol>
+    </section>
+    <section class="layer" id="content" aria-labelledby="h-content">
+      <div class="layer-head"><h2 id="h-content"><span class="tag t-content">Layer 2</span> Content</h2><span class="layer-count" id="c-content"></span></div>
+      <p class="layer-when">Written as words, images, video and documents are created.</p>
+      <ol class="items" id="l-content"></ol>
+    </section>
+    <section class="layer" id="code" aria-labelledby="h-code">
+      <div class="layer-head"><h2 id="h-code"><span class="tag t-code">Layer 3</span> Code</h2><span class="layer-count" id="c-code"></span></div>
+      <p class="layer-when">Built at handoff. Test with the keyboard and a screen reader.</p>
+      <ol class="items" id="l-code"></ol>
+    </section>
+
+    <section class="out" aria-labelledby="out-h">
+      <h2 id="out-h">Your findings</h2>
+      <p>Copies every item you marked <b>Issue</b>, grouped by layer with its WCAG rule, ready to paste into your share-out.</p>
+      <div class="row">
+        <label for="page">Page you audited
+          <select id="page">
+            <option>Land Reuse</option><option>Create-a-Project</option><option>Buy Back &amp; Occupied</option>
+            <option>Compliance</option><option>Nuisance Abatement</option><option>Community Partners</option><option>Homepage</option>
+          </select>
+        </label>
+        <button class="btn" id="copy" type="button">Copy issues</button>
+        <button class="btn ghost" id="reset" type="button">Clear all marks</button>
+      </div>
+      <div class="confirm" id="confirm" hidden>
+        <span>Clear every mark on this page?</span>
+        <button class="btn" id="yes" type="button">Yes, clear</button>
+        <button class="btn ghost" id="no" type="button">Keep them</button>
+      </div>
+      <p class="status" id="status" role="status"></p>
+      <label for="outtext" class="sr-only">Copied findings</label>
+      <textarea id="outtext" hidden readonly></textarea>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built for SI 538 by Nikita Rochiramani. Format inspired by the A11y Project checklist. This is a curated, teaching-sized selection, not every WCAG 2.2 criterion. Your marks stay in this browser only.</p>
+  </footer>
+</div>
+
+<script>
+document.documentElement.lang = 'en';
+const U = 'https://www.w3.org/WAI/WCAG22/Understanding/';
+const TYPES = [
+  ['images', 'Images'], ['video', 'Video or audio'], ['forms', 'Forms'], ['links', 'Buttons, menus, accordions'],
+  ['motion', 'Carousel or animation'], ['tables', 'Data tables'], ['pdf', 'PDFs']
+];
+// [layer, id, task, why/test, sc, scName, slug, level, tag]
+const ITEMS = [
+  ['design','d1','Use one <code>h1</code> per page, then a logical outline of <code>h2</code>s and <code>h3</code>s.','Screen reader users jump by headings like a table of contents. Test: WAVE › Structure.','1.3.1','Info and Relationships','info-and-relationships','A','every'],
+  ['design','d2','Make text contrast at least 4.5:1, or 3:1 for large text (24px, or 19px bold).','Test: paste both hex codes into the WebAIM Contrast Checker.','1.4.3','Contrast (Minimum)','contrast-minimum','AA','every'],
+  ['design','d3','Make icons, input borders and focus rings at least 3:1 against their background.','A faint input border is invisible to many people with low vision.','1.4.11','Non-text Contrast','non-text-contrast','AA','every'],
+  ['design','d4','Never use color alone to show meaning, like errors, required fields or links.','Pair color with text or an icon. Test: view a grayscale screenshot.','1.4.1','Use of Color','use-of-color','A','every'],
+  ['design','d5','Design a visible focus state for every link, button and field.','Can a keyboard user see where they are on the page?','2.4.7','Focus Visible','focus-visible','AA','every'],
+  ['design','d6','Make the layout work at 320px wide with no sideways scrolling.','Test: zoom a desktop browser to 400%.','1.4.10','Reflow','reflow','AA','every'],
+  ['design','d7','Let text grow to 200% without getting cut off or overlapping.','Avoid fixed-height boxes around text. Test: Ctrl or Cmd +.','1.4.4','Resize Text','resize-text','AA','every'],
+  ['design','d8','Keep navigation and help in the same place on every page.','Predictable layouts reduce effort for people with cognitive disabilities.','3.2.3','Consistent Navigation','consistent-navigation','AA','every'],
+  ['design','d9','Don’t let sticky headers, banners or chat bubbles cover the focused element.','Test: Tab to the bottom of the page. Is anything hidden behind the chat button?','2.4.11','Focus Not Obscured (Minimum)','focus-not-obscured-minimum','AA','every'],
+  ['design','d10','Write instructions that don’t rely on shape, size or position alone.','“Click the round button on the right” fails for screen reader users.','1.3.3','Sensory Characteristics','sensory-characteristics','A','every'],
+  ['design','d11','Make tap targets at least 24 × 24 px. Aim for 44 × 44.','Test: measure dots, arrows and icon buttons in DevTools.','2.5.8','Target Size (Minimum)','target-size-minimum','AA','links'],
+  ['design','d12','Give anything that moves or auto-advances a visible pause button.','Carousels that change while you read fail many people.','2.2.2','Pause, Stop, Hide','pause-stop-hide','A','motion'],
+  ['design','d13','Design labels that stay visible above fields. Don’t use placeholder text as the label.','Placeholders disappear as soon as someone starts typing.','3.3.2','Labels or Instructions','labels-or-instructions','A','forms'],
+
+  ['content','c1','Write a descriptive, unique title for every page.','The title is the first thing a screen reader announces.','2.4.2','Page Titled','page-titled','A','every'],
+  ['content','c2','Use plain language. Explain or replace jargon.','Would a neighbor understand “Compliance achieved over all programs”?','3.1.5','Reading Level','reading-level','AAA','every'],
+  ['content','c3','Give every meaningful image alt text that describes what it shows.','“Red brick two-story house with a front lawn,” not “Image.” Test: WAVE › Errors.','1.1.1','Non-text Content','non-text-content','A','images'],
+  ['content','c4','Give decorative images an empty alt: <code>alt=""</code>.','So screen readers skip them instead of reading a file name.','1.1.1','Non-text Content','non-text-content','A','images'],
+  ['content','c5','Keep important text out of images. Use real text.','Text in images can’t be read aloud, resized or translated.','1.4.5','Images of Text','images-of-text','AA','images'],
+  ['content','c6','Write link and button text that makes sense on its own.','Replace “click here” and “read more” with where the link goes.','2.4.4','Link Purpose (In Context)','link-purpose-in-context','A','links'],
+  ['content','c7','Caption every video with synced, edited captions.','Auto-captions are a start. Fix names, addresses and numbers.','1.2.2','Captions (Prerecorded)','captions-prerecorded','A','video'],
+  ['content','c8','Provide a text transcript for every video and audio clip.','Deaf-blind users read transcripts on a braille display. Include speech, sounds and key visuals.','1.2.3','Audio Description or Media Alternative','audio-description-or-media-alternative-prerecorded','A','video'],
+  ['content','c9','Add audio description when visuals carry information the audio doesn’t.','Narrate on-screen text, charts and actions for blind viewers.','1.2.5','Audio Description (Prerecorded)','audio-description-prerecorded','AA','video'],
+  ['content','c10','Write a visible label and any instructions for every form field.','Say the format up front: “Date of birth (MM/DD/YYYY).”','3.3.2','Labels or Instructions','labels-or-instructions','A','forms'],
+  ['content','c11','Write error messages that say what went wrong and how to fix it.','“Enter an email like name@example.com,” not “Invalid input.”','3.3.3','Error Suggestion','error-suggestion','AA','forms'],
+  ['content','c12','Don’t ask people to re-enter information they already gave.','Pre-fill it or let them pick it.','3.3.7','Redundant Entry','redundant-entry','A','forms'],
+  ['content','c13','Give every data table a clear caption or heading.','Tell people what the table is before they dive in.','1.3.1','Info and Relationships','info-and-relationships','A','tables'],
+  ['content','c14','Make PDFs accessible: tagged, real text, headings and alt text. Or publish the content as a web page.','Scanned PDFs are just pictures of text. PDFs count as web content.','1.3.1','Info and Relationships','info-and-relationships','A','pdf'],
+
+  ['code','k1','Make everything work with a keyboard alone: Tab, Shift+Tab, Enter, Space and arrows.','Test: put your mouse in a drawer.','2.1.1','Keyboard','keyboard','A','every'],
+  ['code','k2','Never trap keyboard focus in a modal, menu or embed.','Can you always Tab or Escape your way out?','2.1.2','No Keyboard Trap','no-keyboard-trap','A','every'],
+  ['code','k3','Keep the focus order the same as the visual order.','Focus shouldn’t jump around the page.','2.4.3','Focus Order','focus-order','A','every'],
+  ['code','k4','Never remove the focus outline without a visible replacement.','One rule fixes it: <code>:focus-visible { outline: 3px solid }</code>.','2.4.7','Focus Visible','focus-visible','AA','every'],
+  ['code','k5','Add a “Skip to main content” link as the first focusable element.','Test: press Tab once after the page loads.','2.4.1','Bypass Blocks','bypass-blocks','A','every'],
+  ['code','k6','Use landmarks: <code>header</code>, <code>nav</code>, <code>main</code>, <code>footer</code>.','Screen readers use them to jump between regions.','1.3.1','Info and Relationships','info-and-relationships','A','every'],
+  ['code','k7','Set the page language: <code>&lt;html lang="en"&gt;</code>.','So screen readers pronounce the words correctly.','3.1.1','Language of Page','language-of-page','A','every'],
+  ['code','k8','Don’t disable pinch-to-zoom. Remove <code>user-scalable=no</code>.','Test: try to pinch-zoom on your phone.','1.4.4','Resize Text','resize-text','AA','every'],
+  ['code','k9','Use real <code>button</code> and <code>a</code> elements, not clickable <code>div</code>s.','Divs can’t be reached with Tab and have no role.','4.1.2','Name, Role, Value','name-role-value','A','links'],
+  ['code','k10','Give icon-only buttons and links an accessible name with <code>aria-label</code>.','Otherwise a screen reader just says “button.”','4.1.2','Name, Role, Value','name-role-value','A','links'],
+  ['code','k11','Tell screen readers whether accordions and menus are open with <code>aria-expanded</code>.','Test: does the screen reader say “expanded” or “collapsed”?','4.1.2','Name, Role, Value','name-role-value','A','links'],
+  ['code','k12','Make hover and focus pop-ups dismissable with Escape and easy to point at.','Tooltips shouldn’t vanish when you move toward them.','1.4.13','Content on Hover or Focus','content-on-hover-or-focus','AA','links'],
+  ['code','k13','Make slider arrows and carousel dots real, focusable buttons.','Test: can you reach every slide with the keyboard?','2.1.1','Keyboard','keyboard','A','motion'],
+  ['code','k14','Connect every label to its field with <code>&lt;label for&gt;</code>.','Clicking the label should put the cursor in the field.','1.3.1','Info and Relationships','info-and-relationships','A','forms'],
+  ['code','k15','Add <code>autocomplete</code> to name, email, phone and address fields.','Browsers can then fill them in for people.','1.3.5','Identify Input Purpose','identify-input-purpose','AA','forms'],
+  ['code','k16','Announce status and error messages without moving focus, using <code>aria-live</code>.','“3 results found” or “Form submitted” should be heard.','4.1.3','Status Messages','status-messages','AA','forms'],
+  ['code','k17','Give embedded videos and maps a <code>title</code> on the <code>iframe</code>.','So screen readers can say what the frame contains.','4.1.2','Name, Role, Value','name-role-value','A','video'],
+  ['code','k18','Mark up data tables with <code>th</code> and <code>scope</code>.','So each cell is read with its column and row headers.','1.3.1','Info and Relationships','info-and-relationships','A','tables'],
+];
+const LAYER_NAME = { design: 'Design', content: 'Content', code: 'Code' };
+const KEY = 'si538-triage-v1';
+let state = { marks: {}, on: TYPES.map(t => t[0]) };
+try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && s.marks && Array.isArray(s.on)) state = s; } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+
+const chips = document.getElementById('chips');
+TYPES.forEach(([k, label]) => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'chip'; b.textContent = label; b.dataset.k = k;
+  b.setAttribute('aria-pressed', state.on.includes(k) ? 'true' : 'false');
+  b.addEventListener('click', () => {
+    const on = b.getAttribute('aria-pressed') !== 'true';
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    state.on = on ? [...state.on, k] : state.on.filter(x => x !== k);
+    save(); refresh();
+  });
+  chips.appendChild(b);
+});
+
+const esc = s => s.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+ITEMS.forEach(([layer, id, task, why, sc, name, slug, lvl, tag]) => {
+  const li = document.createElement('li');
+  li.className = 'item'; li.id = id; li.dataset.tag = tag;
+  const tagLabel = tag === 'every' ? 'Every page' : TYPES.find(t => t[0] === tag)[1];
+  li.innerHTML = `
+    <div>
+      <p class="task" id="${id}-t">${task}</p>
+      <p class="meta"><a href="${U}${slug}" target="_blank" rel="noopener">${sc} ${name}</a><span class="lvl" title="WCAG level ${lvl}">${lvl}</span><span>· ${tagLabel}</span></p>
+      <p class="why">${why}</p>
+    </div>
+    <fieldset class="seg" aria-describedby="${id}-t">
+      <legend>Result for: ${esc(task)}</legend>
+      <input type="radio" name="${id}" id="${id}-p" value="pass"><label for="${id}-p">Pass</label>
+      <input type="radio" name="${id}" id="${id}-i" value="issue"><label for="${id}-i">Issue</label>
+      <input type="radio" name="${id}" id="${id}-n" value="na"><label for="${id}-n">N/A</label>
+    </fieldset>`;
+  const m = state.marks[id];
+  if (m) { const r = li.querySelector(`input[value="${m}"]`); if (r) r.checked = true; li.classList.add('s-' + m); }
+  li.querySelectorAll('input').forEach(r => r.addEventListener('change', () => {
+    state.marks[id] = r.value; li.classList.remove('s-pass', 's-issue', 's-na'); li.classList.add('s-' + r.value);
+    save(); refresh();
+  }));
+  document.getElementById('l-' + layer).appendChild(li);
+});
+
+function refresh() {
+  let shown = 0, done = 0, issues = 0;
+  ['design', 'content', 'code'].forEach(L => {
+    let s = 0, d = 0, i = 0;
+    document.querySelectorAll('#l-' + L + ' .item').forEach(li => {
+      const vis = li.dataset.tag === 'every' || state.on.includes(li.dataset.tag);
+      li.hidden = !vis;
+      if (vis) { s++; const m = state.marks[li.id]; if (m) d++; if (m === 'issue') i++; }
+    });
+    document.getElementById('c-' + L).textContent = `${d} of ${s} checked · ${i} issue${i === 1 ? '' : 's'}`;
+    shown += s; done += d; issues += i;
+  });
+  document.getElementById('tally').textContent = `${shown} of ${ITEMS.length} checks apply · ${done} done · ${issues} issue${issues === 1 ? '' : 's'}`;
+}
+refresh();
+
+const status = document.getElementById('status'), out = document.getElementById('outtext');
+document.getElementById('copy').addEventListener('click', () => {
+  const page = document.getElementById('page').value;
+  let text = `Accessibility issues: ${page}\n`;
+  let n = 0;
+  ['design', 'content', 'code'].forEach(L => {
+    const rows = ITEMS.filter(it => it[0] === L && state.marks[it[1]] === 'issue');
+    if (!rows.length) return;
+    text += `\n${LAYER_NAME[L].toUpperCase()}\n`;
+    rows.forEach(it => { text += `- ${esc(it[2])} (WCAG ${it[4]} ${it[5]}, ${it[7]})\n`; n++; });
+  });
+  if (!n) { status.textContent = 'No items are marked Issue yet.'; out.hidden = true; return; }
+  out.value = text; out.hidden = false;
+  const ok = () => { status.textContent = `Copied ${n} issue${n === 1 ? '' : 's'} to your clipboard.`; };
+  const fail = () => { out.focus(); out.select(); status.textContent = 'Copy is blocked here. The text is selected below: press Ctrl or Cmd + C.'; };
+  try { navigator.clipboard.writeText(text).then(ok, fail); } catch (e) { fail(); }
+});
+const confirmBox = document.getElementById('confirm');
+document.getElementById('reset').addEventListener('click', () => { confirmBox.hidden = false; document.getElementById('no').focus(); });
+document.getElementById('no').addEventListener('click', () => { confirmBox.hidden = true; document.getElementById('reset').focus(); });
+document.getElementById('yes').addEventListener('click', () => {
+  state.marks = {}; save();
+  document.querySelectorAll('.seg input').forEach(r => r.checked = false);
+  document.querySelectorAll('.item').forEach(li => li.classList.remove('s-pass', 's-issue', 's-na'));
+  confirmBox.hidden = true; out.hidden = true; status.textContent = 'All marks cleared.'; refresh();
+  document.getElementById('reset').focus();
+});
+</script>
+
+</body></html>
